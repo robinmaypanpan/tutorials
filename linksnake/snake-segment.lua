@@ -13,7 +13,7 @@ local SnakeSegment = class('SnakeSegment') -- 'Fruit' is the class' name
 
 SnakeSegment.static.speed = .003
 
-SnakeSegment.static.soloPart = love.graphics.newImage('test.png')
+SnakeSegment.static.soloPart = love.graphics.newImage('images/test.png')
 SnakeSegment.static.width = SnakeSegment.soloPart:getWidth()
 SnakeSegment.static.height = SnakeSegment.soloPart:getHeight()
 SnakeSegment.static.originY = SnakeSegment.height * 0.5

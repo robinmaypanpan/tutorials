@@ -2,7 +2,7 @@ local class = require('../lib/middleclass')
 
 local Apple = class('Apple')
 
-Apple.static.apple = love.graphics.newImage('apple.png')
+Apple.static.apple = love.graphics.newImage('images/apple.png')
 
 
 function Apple:initialize()
