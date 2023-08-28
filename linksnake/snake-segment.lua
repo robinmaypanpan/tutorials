@@ -1,5 +1,8 @@
 local class = require('../lib/middleclass')
 local myMath = require('../lib/math')
+local Entity = require('entity')
+
+local SnakeSegment = class('SnakeSegment', Entity) 
 
 local Opposites = {
     up='down',
@@ -7,8 +10,6 @@ local Opposites = {
     left='right',
     right='left'
 }
-
-local SnakeSegment = class('SnakeSegment') -- 'Fruit' is the class' name
 
 
 SnakeSegment.static.speed = .003
@@ -20,11 +21,8 @@ SnakeSegment.static.originY = SnakeSegment.height * 0.5
 SnakeSegment.static.originX = SnakeSegment.width * 0.5
 
 -- The "Constructor" for the snake head
-function SnakeSegment:initialize(x,y)
-    self.x = x
-    self.y = y
-    self.direction = "right"
-    self.orientation = 0
+function SnakeSegment:initialize()
+    Entity.initialize(self, SnakeSegment.soloPart)
 end
 
 function SnakeSegment:setDirection(newDirection)
@@ -32,15 +30,6 @@ function SnakeSegment:setDirection(newDirection)
         and newDirection ~= Opposites[self.direction] then
         self.direction = newDirection
     end
-end
-
-function SnakeSegment:getCollisionRectangle()
-    return {
-        x = self.x,
-        y = self.y,
-        width = SnakeSegment.width,
-        height = SnakeSegment.height
-    }
 end
 
 -- Called prior to drawing the SnakeSegment to update its location according to its speed and direction

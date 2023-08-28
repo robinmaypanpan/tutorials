@@ -1,26 +1,15 @@
 local class = require('../lib/middleclass')
+local Entity = require('entity')
 
-local Apple = class('Apple')
+local Apple = class('Apple', Entity)
 
 Apple.static.apple = love.graphics.newImage('images/apple.png')
 
 
 function Apple:initialize()
-    local minX, minY, width, height = love.window.getSafeArea()
-    self.x = love.math.random(minX, width)
-    self.y = love.math.random(minY, height)  
-    self.width =  Apple.apple:getWidth()
-    self.height =  Apple.apple:getHeight()
+    Entity.initialize(self, Apple.apple)
 end
 
-function Apple:getCollisionRectangle()
-    return {
-        x = self.x,
-        y = self.y,
-        width = self.width,
-        height = self.height
-    }
-end
 function Apple:draw(x, y)
     love.graphics.draw(Apple.apple, self.x, self.y)
 end
