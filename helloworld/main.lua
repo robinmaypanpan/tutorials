@@ -7,7 +7,7 @@ end
 
 -- Called before calling draw each time a frame updates
 function love.update()
-    if love.mouse.isGrabbed and not love.mouse.isDown(1) then
+    if not love.mouse.isDown(1) then
         x, y = love.mouse.getPosition()
     end
 end
