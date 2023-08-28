@@ -1,9 +1,17 @@
 local SnakeSegment = require('snake-segment')
+local Apple = require('apple')
 
 -- This is called once on application startup. Techincally not necessary,
 -- but it can feel good to use.
 function love.load()
     snake = SnakeSegment:new(128,128)
+    appleList = {}
+
+    for i = 1, 5 do
+        local apple = Apple:new()
+        table.insert(appleList, apple)
+    end
+
     score = 0
 end
 
@@ -28,6 +36,9 @@ end
 -- Love callback function for the draw method.  Called every frame to draw things
 function love.draw()
     snake:draw()
+    for _,apple in pairs(appleList) do
+        apple:draw()
+    end
     love.graphics.print("Score :" .. score, 0, 0)
 end
 
