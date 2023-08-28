@@ -1,5 +1,6 @@
 local SnakeSegment = require('snake-segment')
 local Apple = require('apple')
+local collide = require('../lib/collide')
 
 -- This is called once on application startup. Techincally not necessary,
 -- but it can feel good to use.
@@ -31,6 +32,12 @@ end
 -- Callback function for the update method. Called every frame to update things
 function love.update()
     snake:update()
+    for i,apple in pairs(appleList) do
+        if collide(snake:getCollisionRectangle(), apple:getCollisionRectangle()) then
+            score = score + 1
+            table.remove(appleList, i)
+        end
+    end
 end
 
 -- Love callback function for the draw method.  Called every frame to draw things

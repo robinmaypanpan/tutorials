@@ -34,6 +34,15 @@ function SnakeSegment:setDirection(newDirection)
     end
 end
 
+function SnakeSegment:getCollisionRectangle()
+    return {
+        x = self.x,
+        y = self.y,
+        width = SnakeSegment.width,
+        height = SnakeSegment.height
+    }
+end
+
 -- Called prior to drawing the SnakeSegment to update its location according to its speed and direction
 function SnakeSegment:update()
     local minX, minY, width, height = love.window.getSafeArea()
