@@ -10,16 +10,21 @@ local Opposites = {
 
 local SnakeSegment = class('SnakeSegment') -- 'Fruit' is the class' name
 
-SnakeSegment.static.width = 15
-SnakeSegment.static.height = 15
 
 SnakeSegment.static.speed = .003
+
+SnakeSegment.static.soloPart = love.graphics.newImage('test.png')
+SnakeSegment.static.width = SnakeSegment.soloPart:getWidth()
+SnakeSegment.static.height = SnakeSegment.soloPart:getHeight()
+SnakeSegment.static.originY = SnakeSegment.height * 0.5
+SnakeSegment.static.originX = SnakeSegment.width * 0.5
 
 -- The "Constructor" for the snake head
 function SnakeSegment:initialize(x,y)
     self.x = x
     self.y = y
     self.direction = "right"
+    self.orientation = 0
 end
 
 function SnakeSegment:setDirection(newDirection)
@@ -38,12 +43,16 @@ function SnakeSegment:update()
 
     if self.direction == "up" then
         self.y = self.y - vspeed
+        self.orientation = 0
     elseif self.direction == "down" then
         self.y = self.y + vspeed
+        self.orientation = math.pi
     elseif self.direction == "left" then
         self.x = self.x - hspeed
+        self.orientation = math.pi*1.5
     elseif self.direction == "right" then
         self.x = self.x + hspeed
+        self.orientation = math.pi*0.5
     end
 
     self.x = myMath:mid(minX, self.x, minX + width - SnakeSegment.width)
@@ -52,7 +61,9 @@ end
 
 -- Draws the SnakeSegment
 function SnakeSegment:draw()
-    love.graphics.rectangle("fill", self.x, self.y, SnakeSegment.width, SnakeSegment.height, 2, 2)
+    -- love.graphics.rectangle("fill", self.x, self.y, SnakeSegment.width, SnakeSegment.height, 2, 2)
+    love.graphics.draw(SnakeSegment.soloPart, self.x, self.y, self.orientation, 1, 1, 
+        SnakeSegment.originX, SnakeSegment.originY)
 end
 
 return SnakeSegment
