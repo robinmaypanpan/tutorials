@@ -1,3 +1,7 @@
+if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then
+    require("lldebugger").start()
+end
+
 -- This is called once on application startup. Techincally not necessary,
 -- but it can feel good to use.
 function love.load()
