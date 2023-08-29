@@ -11,6 +11,13 @@ local Opposites = {
     right='left'
 }
 
+local spawnDir = {
+    up = {x = 0, y = 1},
+    down = {x = 0, y = -1},
+    left = {x = 1, y = 0},
+    right = {x = -1, y = 0},
+}
+
 
 SnakeSegment.static.speed = .003
 
@@ -24,6 +31,8 @@ SnakeSegment.static.originX = SnakeSegment.width * 0.5
 function SnakeSegment:initialize(x, y)
     Entity.initialize(self, SnakeSegment.soloPart, x, y)
     self:setDirection("up")
+    self.dirX = 0
+    self.dirY = 0
 end
 
 function SnakeSegment:setDirection(newDirection)
@@ -32,7 +41,7 @@ function SnakeSegment:setDirection(newDirection)
         self.direction = newDirection
     end
     if self.next then
-        self.next:setDirection(newDirection)
+        self.next:setDirection(self.direction)
     end
 end
 
@@ -68,6 +77,7 @@ end
 function SnakeSegment:draw()
     love.graphics.draw(SnakeSegment.soloPart, self.x, self.y, self.orientation, 1, 1, 
         SnakeSegment.originX, SnakeSegment.originY)
+     --love.graphics.draw(SnakeSegment.soloPart, self.x, self.y)
     if self.next then
         self.next:draw()
     end
@@ -77,9 +87,14 @@ end
 function SnakeSegment:addSegment()
     if self.next then
         self.next:addSegment()
-    else
-        local segment = SnakeSegment:new(self.x, self.y)
+    else --inside the tail
+        local dir = spawnDir[self.direction]
+        local segment = SnakeSegment:new(self.x + self.width * dir.x, self.y + self.height * dir.y)
         self.next = segment
+        segment.direction = self.direction
     end
 end
 return SnakeSegment
+
+
+-- 
