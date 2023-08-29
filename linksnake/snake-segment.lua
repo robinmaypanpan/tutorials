@@ -21,15 +21,17 @@ local spawnDir = {
 
 SnakeSegment.static.speed = .003
 
-SnakeSegment.static.soloPart = love.graphics.newImage('images/test.png')
-SnakeSegment.static.width = SnakeSegment.soloPart:getWidth()
-SnakeSegment.static.height = SnakeSegment.soloPart:getHeight()
+SnakeSegment.static.headImg = love.graphics.newImage('images/test.png')
+SnakeSegment.static.segmentImg = love.graphics.newImage('images/segment.png')
+SnakeSegment.static.tailImg = love.graphics.newImage('images/tail.png')
+SnakeSegment.static.width = SnakeSegment.headImg:getWidth()
+SnakeSegment.static.height = SnakeSegment.headImg:getHeight()
 SnakeSegment.static.originY = SnakeSegment.height * 0.5
 SnakeSegment.static.originX = SnakeSegment.width * 0.5
 
 -- The "Constructor" for the snake head
 function SnakeSegment:initialize(x, y)
-    Entity.initialize(self, SnakeSegment.soloPart, x, y)
+    Entity.initialize(self, SnakeSegment.headImg, x, y)
     self:setDirection("up")
     self.dirX = 0
     self.dirY = 0
@@ -96,13 +98,16 @@ end
 
 -- Draws the SnakeSegment
 function SnakeSegment:draw()
-    love.graphics.draw(SnakeSegment.soloPart, self.x, self.y, self.orientation, 1, 1, 
+    love.graphics.draw(self.image, self.x, self.y, self.orientation, 1, 1, 
         SnakeSegment.originX, SnakeSegment.originY)
-     --love.graphics.draw(SnakeSegment.soloPart, self.x, self.y)
+     --love.graphics.draw(SnakeSegment.headImg, self.x, self.y)
     if self.next then
         self.next:draw()
     end
 end
+
+-- HSSSST
+-- 123456
 
 -- Adds a segment to the snake when an apple is eaten
 function SnakeSegment:addSegment()
@@ -113,7 +118,11 @@ function SnakeSegment:addSegment()
         local segment = SnakeSegment:new(self.x + self.width * dir.x, self.y + self.height * dir.y)
         self.next = segment
         segment.previousSegment = self
+        if self.previousSegment ~= nil then
+            self.image = SnakeSegment.segmentImg
+        end
         segment.direction = self.direction
+        segment.image = SnakeSegment.tailImg
     end
 end
 return SnakeSegment
