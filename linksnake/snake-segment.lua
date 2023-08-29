@@ -21,14 +21,18 @@ SnakeSegment.static.originY = SnakeSegment.height * 0.5
 SnakeSegment.static.originX = SnakeSegment.width * 0.5
 
 -- The "Constructor" for the snake head
-function SnakeSegment:initialize()
-    Entity.initialize(self, SnakeSegment.soloPart)
+function SnakeSegment:initialize(x, y)
+    Entity.initialize(self, SnakeSegment.soloPart, x, y)
+    self:setDirection("up")
 end
 
 function SnakeSegment:setDirection(newDirection)
     if newDirection ~= self.direction 
         and newDirection ~= Opposites[self.direction] then
         self.direction = newDirection
+    end
+    if self.next then
+        self.next:setDirection(newDirection)
     end
 end
 
@@ -55,13 +59,27 @@ function SnakeSegment:update()
 
     self.x = myMath:mid(minX, self.x, minX + width - SnakeSegment.width)
     self.y = myMath:mid(minY, self.y, minY + height - SnakeSegment.height)
+    if self.next then
+        self.next:update()
+    end
 end
 
 -- Draws the SnakeSegment
 function SnakeSegment:draw()
-    -- love.graphics.rectangle("fill", self.x, self.y, SnakeSegment.width, SnakeSegment.height, 2, 2)
     love.graphics.draw(SnakeSegment.soloPart, self.x, self.y, self.orientation, 1, 1, 
         SnakeSegment.originX, SnakeSegment.originY)
+    if self.next then
+        self.next:draw()
+    end
 end
 
+-- Adds a segment to the snake when an apple is eaten
+function SnakeSegment:addSegment()
+    if self.next then
+        self.next:addSegment()
+    else
+        local segment = SnakeSegment:new(self.x, self.y)
+        self.next = segment
+    end
+end
 return SnakeSegment

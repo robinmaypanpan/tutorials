@@ -36,6 +36,7 @@ function love.update()
         if collide(snake:getCollisionRectangle(), apple:getCollisionRectangle()) then
             score = score + 1
             table.remove(appleList, i)
+            snake:addSegment()
         end
     end
 end
