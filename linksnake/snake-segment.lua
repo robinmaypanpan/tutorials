@@ -33,24 +33,45 @@ function SnakeSegment:initialize(x, y)
     self:setDirection("up")
     self.dirX = 0
     self.dirY = 0
+    self.moveTimeout = 0
 end
 
 function SnakeSegment:setDirection(newDirection)
-    if newDirection ~= self.direction 
+    if self.moveTimeout == 0 
+        and newDirection ~= self.direction 
         and newDirection ~= Opposites[self.direction] then
-        self.direction = newDirection
+            self.direction = newDirection
+            self.moveTimeout = 8
     end
-    if self.next then
-        self.next:setDirection(self.direction)
-    end
+    
 end
 
 -- Called prior to drawing the SnakeSegment to update its location according to its speed and direction
 function SnakeSegment:update()
+    if self.moveTimeout > 0 then
+        self.moveTimeout = self.moveTimeout - 1
+    end
+
+    if self.previousSegment then
+        -- Runs for all segments that are not the head
+        -- define a direction for the segment
+        if self.previousSegment.x > self.x and self.previousSegment.y == self.y then
+            self.direction = "right"
+        elseif self.previousSegment.x < self.x and self.previousSegment.y == self.y then
+            self.direction = "left"
+        elseif self.previousSegment.y > self.y and self.previousSegment.x == self.x then
+            self.direction = "down"
+        elseif self.previousSegment.y < self.y and self.previousSegment.x == self.x then
+            self.direction = "up"
+        end
+    end
+
     local minX, minY, width, height = love.window.getSafeArea()
 
-    local vspeed = SnakeSegment.speed * height
-    local hspeed = SnakeSegment.speed * width
+    -- local vspeed = SnakeSegment.speed * height
+    -- local hspeed = SnakeSegment.speed * width
+    local vspeed = self.height / 8
+    local hspeed = self.width / 8
 
     if self.direction == "up" then
         self.y = self.y - vspeed
@@ -91,6 +112,7 @@ function SnakeSegment:addSegment()
         local dir = spawnDir[self.direction]
         local segment = SnakeSegment:new(self.x + self.width * dir.x, self.y + self.height * dir.y)
         self.next = segment
+        segment.previousSegment = self
         segment.direction = self.direction
     end
 end
