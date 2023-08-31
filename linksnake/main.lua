@@ -7,7 +7,7 @@ local collide = require('../lib/collide')
 function love.load()
     snake = SnakeSegment:new(128,128)
     appleList = {}
-
+    -- removed this to make 
     for i = 1, 5 do
         local apple = Apple:new()
         table.insert(appleList, apple)
@@ -37,6 +37,10 @@ function love.update()
             score = score + 1
             table.remove(appleList, i)
             snake:addSegment()
+            if #appleList < 1 then
+                local apple = Apple:new()
+                table.insert(appleList, apple)
+            end
         end
     end
 end
