@@ -4,16 +4,17 @@ local collide = require('../lib/collide')
 
 -- This is called once on application startup. Techincally not necessary,
 -- but it can feel good to use.
+
 function love.load()
     snake = SnakeSegment:new(128,128)
     appleList = {}
-    -- removed this to make 
-    for i = 1, 5 do
-        local apple = Apple:new()
+    for i = 1, 1 do
+        local apple = Apple:new(2)
         table.insert(appleList, apple)
     end
 
     score = 0
+    appleCountdown = 2
 end
 
 -- Callback function for keypresses from the love system
@@ -35,11 +36,18 @@ function love.update()
     for i,apple in pairs(appleList) do
         if collide(snake:getCollisionRectangle(), apple:getCollisionRectangle()) then
             score = score + 1
-            table.remove(appleList, i)
-            snake:addSegment()
+            appleCountdown = appleCountdown-1
+            if apple.entityType == "redApple" then
+                -- do the list reversal here
+                table.remove(appleList, i)
+                snake = snake:reverseSegmentList()
+            else
+                table.remove(appleList, i)
+                snake:addSegment()
+            end
             if #appleList < 1 then
-                local apple = Apple:new()
-                table.insert(appleList, apple)
+                local newApple = Apple:new(appleCountdown)
+                table.insert(appleList, newApple)
             end
         end
     end
@@ -50,6 +58,10 @@ function love.draw()
     snake:draw()
     for _,apple in pairs(appleList) do
         apple:draw()
+        if appleCountdown == 0 then
+            appleCountdown = 2
+        end
+        -- love.graphics.print(apple.entityType, 0, 10)
     end
     love.graphics.print("Score :" .. score, 0, 0)
 end
@@ -60,4 +72,4 @@ end
 -- 3) When you eat an apple, add another segment to the snake that follows the first segment,
 -- and raise the score
 -- 4) Create a reverse apple. This new apple should reverse the snake entirely, with its tail becoming the new head.
--- 5) 
+-- 5) Create a game over condition and screen

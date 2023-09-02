@@ -36,6 +36,7 @@ function SnakeSegment:initialize(x, y)
     self.dirX = 0
     self.dirY = 0
     self.moveTimeout = 0
+    self.entityType = "snake"
 end
 
 function SnakeSegment:setDirection(newDirection)
@@ -125,7 +126,46 @@ function SnakeSegment:addSegment()
         segment.image = SnakeSegment.tailImg
     end
 end
+
+function SnakeSegment:reverseSegmentList()
+    -- if self.next == nil and self.previousSegment then 
+    --     self.next = self.previousSegment
+    --     self.previousSegment = nil
+    --     newHead = self
+    --     self.next:reverseSegmentList()     
+    -- elseif self.next and self.previousSegment then -- this is a body segment
+    --     local oldNext = self.next -- this self.next is the old tail
+    --     self.next = self.previousSegment -- this should be the next up body segment
+    --     self.previousSegment = oldNext -- refers to making the old tail the new head in relation to this segment
+    --     self.next:reverseSegmentList()
+    -- else
+    --     self.previousSegment = self.next
+    --     self.next = nil
+    --     self.direction = nil
+    -- end
+    -- if newHead then
+    --     return self
+    -- end
+    if self.next and self.previousSegment == nil then
+        self.previousSegment = self.next
+        self.next = nil
+        self.direction = Opposites[self.direction]
+        local newHead = self.previousSegment:reverseSegmentList()
+        return newHead
+    elseif self.next and self.previousSegment then
+        local oldPrevious
+        oldPrevious = self.previousSegment
+        self.previousSegment = self.next
+        self.next = oldPrevious
+        self.direction = Opposites[self.direction]
+        local newHead = self.previousSegment:reverseSegmentList()
+        return newHead
+    else
+        self.next = self.previousSegment
+        self.previousSegment = nil
+        self.direction = Opposites[self.direction]
+        return self
+    end
+end
+
 return SnakeSegment
-
-
--- 
